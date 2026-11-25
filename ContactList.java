@@ -1,38 +1,13 @@
 
 
+public class ContactList {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-public class ContactList implements ContactADT {
-
-    private int       capacity    = 4;                  
-    private int       size        = 0;                  
-    private Contact[] contactlist = new Contact[4];     
+    private int       capacity = 4;                  
+    private int       size     = 0;                  
+    private Contact[] array    = new Contact[4];     
 
     public int getSize()     { return size; }
     public int getCapacity() { return capacity; }
-
-    
-    
-    
 
     
     public void insertAtEnd(Contact c) {
@@ -41,9 +16,53 @@ public class ContactList implements ContactADT {
         if (size == capacity) {
             resize();
         }
+        array[size] = c;
 
-        contactlist[size] = c;   
-        size++;                  
+        
+        size++;
+    }
+
+    
+    
+    public void insertAtPosition(int index, Contact c) {
+
+        
+        if (index < 0 || index > size) {
+            return;
+        }
+
+        
+        if (size == capacity) {
+            resize();
+        }
+
+        
+        for (int i = size; i > index; i--) {
+            array[i] = array[i - 1];
+        }
+
+        
+        array[index] = c;
+
+        
+        size++;
+    }
+
+    
+    public void delete(int index) {
+
+        
+        if (index < 0 || index >= size) {
+            return;
+        }
+
+        
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+
+        
+        size--;
     }
 
     
@@ -51,13 +70,16 @@ public class ContactList implements ContactADT {
 
         capacity = capacity * 2;
 
-        Contact[] newContactlist = new Contact[capacity];
+        
+        Contact[] newArray = new Contact[capacity];
 
+        
         for (int i = 0; i < size; i++) {
-            newContactlist[i] = contactlist[i];
+            newArray[i] = array[i];
         }
 
-        contactlist = newContactlist;
+        
+        array = newArray;
     }
 
     
@@ -65,14 +87,21 @@ public class ContactList implements ContactADT {
         if (index < 0 || index >= size) {
             return null;
         }
-        return contactlist[index];
+        return array[index];
+    }
+
+    
+    public void clear() {
+        capacity = 4;
+        size     = 0;
+        array    = new Contact[4];
     }
 
     
     
     public boolean isSortedById() {
         for (int i = 0; i < size - 1; i++) {
-            if (contactlist[i].getId() > contactlist[i + 1].getId()) {
+            if (array[i].getId() > array[i + 1].getId()) {
                 return false;
             }
         }
@@ -81,72 +110,18 @@ public class ContactList implements ContactADT {
 
     
     public int linearSearch(int id) {
-        return Searcher.linearSearch(contactlist, size, id);
+        return Searcher.linearSearch(array, size, id);
     }
 
     public int linearSearchByPhone(long phone) {
-        return Searcher.linearSearchByPhone(contactlist, size, phone);
+        return Searcher.linearSearchByPhone(array, size, phone);
     }
 
     public int binarySearch(int id) {
-        return Searcher.binarySearch(contactlist, size, id);
+        return Searcher.binarySearch(array, size, id);
     }
 
     public int recursiveBinarySearch(int id) {
-        return Searcher.recursiveBinarySearch(contactlist, id, 0, size - 1);
-    }
-
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public boolean insertAtPosition(int index, Contact c) {
-        if (index < 0 || index > size) {
-            return false;
-        }
-
-        if (size == capacity) {
-            resize();
-        }
-
-        for (int i = size; i > index; i--) {
-            contactlist[i] = contactlist[i - 1];
-        }
-
-        contactlist[index] = c;
-        size++;
-        return true;
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    public boolean delete(int index) {
-        if (index < 0 || index >= size) {
-            return false;
-        }
-
-        for (int i = index; i < size - 1; i++) {
-            contactlist[i] = contactlist[i + 1];
-        }
-
-        contactlist[size - 1] = null;
-        size--;
-        return true;
+        return Searcher.recursiveBinarySearch(array, id, 0, size - 1);
     }
 }
